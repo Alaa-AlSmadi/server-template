@@ -1,26 +1,6 @@
 'use strict';
 
-const increaseButton = document.getElementById('increaseButton'),
-    decreaseButton = document.getElementById('decreaseButton'),
-    appP = document.getElementById('appP');
-
 let stateValue = 0;
-
-increaseButton.addEventListener('click', () => {
-    const increaseOptions = {
-        type: 'increase',
-        value: 1
-    }
-    sendAPI_Request(increaseOptions);
-})
-
-decreaseButton.addEventListener('click', () => {
-    const decreaseOptions = {
-        type: 'decrease',
-        value: 1
-    }
-    sendAPI_Request(decreaseOptions);
-})
 
 function sendAPI_Request(options) {
     const { type, value } = options;
@@ -34,14 +14,14 @@ function sendAPI_Request(options) {
     }).then(r => {
         r.json().then(_r => {
             stateValue = _r.counter;
-            appP.innerText = stateValue;
+            pointers.appCounterState.innerText = stateValue;
         })
     }).catch(err => {
         throw err;
     })
 }
 
-function getCounter_Request(){
+function getCounter_Request() {
 
     fetch("/api/counterManagements", {
         method: 'GET',
@@ -51,11 +31,33 @@ function getCounter_Request(){
     }).then(r => {
         r.json().then(_r => {
             stateValue = _r.counter;
-            appP.innerText = stateValue;
+            pointers.appCounterState.innerText = stateValue;
         })
     }).catch(err => {
         throw err;
     })
 }
 
-getCounter_Request();
+loadTemplatsContent('counter', () => {
+    pointers.increaseButton = document.getElementById('increaseButton');
+    pointers.decreaseButton = document.getElementById('decreaseButton');
+    pointers.appCounterState = document.getElementById('appCounterState');
+
+    pointers.increaseButton.addEventListener('click', () => {
+        const increaseOptions = {
+            type: 'increase',
+            value: 1
+        }
+        sendAPI_Request(increaseOptions);
+    })
+
+    pointers.decreaseButton.addEventListener('click', () => {
+        const decreaseOptions = {
+            type: 'decrease',
+            value: 1
+        }
+        sendAPI_Request(decreaseOptions);
+    })
+
+    getCounter_Request();
+});
